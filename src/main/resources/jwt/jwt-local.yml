@@ -1,0 +1,16 @@
+header:
+   authorization: Authorization
+
+jwt:
+   issuer: ssb_zuul_gateway_v0.1
+   apikey: c3NiZ2F0ZXdheWtleUhTMjU2c2VjcmV0S2V5IUAxMjM=
+   login:
+      memberKey: memberBase
+      valid:
+         minute: 60
+   access:
+      valid:
+         minute: 1
+   refresh:
+      valid:
+         day: 30
