@@ -1,0 +1,29 @@
+spring: 
+   application: 
+      name: comm
+
+
+---
+spring: 
+   profiles: local
+   
+server: 
+   port: 8700
+  
+message:
+   cacheSecond: 60
+
+
+---
+spring: 
+   profiles: dev
+   
+   
+   
+   
+   
+   
+   
+---
+spring: 
+   profiles: prd
