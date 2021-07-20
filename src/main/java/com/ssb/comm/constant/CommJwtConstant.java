@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public enum CommConstant{
+public enum CommJwtConstant{
 	
 	HEADER_BEARER_SPLIT("Bearer "),
 	/* 토큰 헤더 정보 */

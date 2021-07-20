@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +14,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import com.ssb.comm.config.property.YamlPropertySourceFactory;
-import com.ssb.comm.constant.CommConstant;
+import com.ssb.comm.constant.CommJwtConstant;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -67,36 +66,12 @@ public class JwtHelper {
 	private Map<String, Object> getHeader() {
 		
         Map<String, Object> headers = new HashMap<String, Object>();
-        headers.put("typ", CommConstant.TOKEN_HEADER_TYP_JWT.getValue());
-        headers.put("alg", CommConstant.TOKEN_HEADER_ALG_HS256.getValue());
+        headers.put("typ", CommJwtConstant.TOKEN_HEADER_TYP_JWT.getValue());
+        headers.put("alg", CommJwtConstant.TOKEN_HEADER_ALG_HS256.getValue());
         
 	    return headers;
 	}
 	
-	/** 
-	* @methodName : getLogingMemberChk 
-	* @author : Sungbo Sim
-	* @date : 2021.07.07 
-	* @param ctx
-	* @param claims
-	* 로그인 정보를 담고 있는 Token일 경우 유효시간을 초기화 시켜서 재발급 
-	*/
-	@SuppressWarnings("unchecked")
-	public void setResLoginToken(HttpServletResponse response, Map<String, Object> claims){
-		
-		if(claims.get(memberKey) != null) {
-			try {
-				
-				response.addHeader(authHeader, createToken(CommConstant.TOKEN_LOGIN_TYPE.getValue(), (Map<String, Object>)claims.get(memberKey)));
-			
-			} catch (Exception e) {
-				
-				log.error("addZuulResponseHeader() : " + e.getMessage());
-			}
-			
-		}
-		
-	}
 	
 	/** 
 	* @methodName : getSigninKey 
@@ -158,15 +133,15 @@ public class JwtHelper {
 		
 		Date expireTime = new Date();
 		
-		if(StringUtils.equals(type, CommConstant.TOKEN_LOGIN_TYPE.getValue())) {
+		if(StringUtils.equals(type, CommJwtConstant.TOKEN_LOGIN_TYPE.getValue())) {
 			expireTime.setTime(expireTime.getTime() + getLoginTokenTime());
 		}
 		
-		if(StringUtils.equals(type, CommConstant.TOKEN_ACCESS_TYPE.getValue())) {
+		if(StringUtils.equals(type, CommJwtConstant.TOKEN_ACCESS_TYPE.getValue())) {
 			expireTime.setTime(expireTime.getTime() + getAccessTokenTime());
 		}
 
-		if(StringUtils.equals(type, CommConstant.TOKEN_REFRESH_TYPE.getValue())) {
+		if(StringUtils.equals(type, CommJwtConstant.TOKEN_REFRESH_TYPE.getValue())) {
 			expireTime.setTime(expireTime.getTime() + getRefreshTokenTime());
 		}
 		
@@ -189,22 +164,18 @@ public class JwtHelper {
 	* 	SignatureException		: 시그너처 연산이 실패하였거나, JWT의 시그너처 검증이 실패한 경우
 	* 	UnsupportedJwtException	: 수신한 JWT의 형식이 애플리케이션에서 원하는 형식과 맞지 않는 경우. 예를 들어, 암호화된 JWT를 사용하는 애프리케이션에 암호화되지 않은 JWT가 전달되는 경우에 이 예외가 발생합니다.
 	*/
-	public boolean requestTokenChk(HttpServletRequest request) {
+	public boolean getTokenValid(HttpServletRequest request) {
 		
 		boolean tokenValid = true;
 		
 		try {
-			
 			String authToken = request.getHeader(authHeader);
-			
 			Jwts.parserBuilder()
 					.requireIssuer(issuer)
 					.setSigningKey(getSigninKey(apiKey))
 					.build()
 					.parseClaimsJws(authToken);
-			
 		} catch(Exception e) {
-			
 			tokenValid = false;
 			log.error("requestTokenChk() : " + e.getMessage());
 		}
@@ -216,18 +187,14 @@ public class JwtHelper {
 	public Map<String, Object> getTokenClaims(HttpServletRequest request) {
 		
 		Claims claims = null;
-		
 		try {
-			
 			String authToken = request.getHeader(authHeader);
-			
 			claims = Jwts.parserBuilder()
 					.requireIssuer(issuer)
 					.setSigningKey(getSigninKey(apiKey))
 					.build()
 					.parseClaimsJws(authToken)
 					.getBody();
-			
 		} catch(Exception e) {
 			log.error("requestTokenChk() : " + e.getMessage());
 		}
