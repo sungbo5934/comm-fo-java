@@ -11,13 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 public class EncryptUtil {
 	
 	public static String encrypt(String unencryptStr, String algorizm) {
+		
 		String encryptStr = StringUtils.EMPTY;
 		
 		try {
 			
-			MessageDigest md = MessageDigest .getInstance(algorizm);
+			MessageDigest md = MessageDigest.getInstance(algorizm);
 			md.update(encryptStr.getBytes());
 			encryptStr = bytesToHex(md.digest());
+			
 		} catch (NoSuchAlgorithmException e) {
 			log.error(e.getMessage());
 		}
