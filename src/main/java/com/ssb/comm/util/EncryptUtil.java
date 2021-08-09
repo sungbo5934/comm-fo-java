@@ -17,7 +17,7 @@ public class EncryptUtil {
 		try {
 			
 			MessageDigest md = MessageDigest.getInstance(algorizm);
-			md.update(encryptStr.getBytes());
+			md.update(unencryptStr.getBytes());
 			encryptStr = bytesToHex(md.digest());
 			
 		} catch (NoSuchAlgorithmException e) {
