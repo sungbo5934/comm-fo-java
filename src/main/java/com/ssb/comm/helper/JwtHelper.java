@@ -169,6 +169,7 @@ public class JwtHelper {
 		boolean tokenValid = true;
 		
 		try {
+			log.info("new Token : " + createToken(CommJwtConstant.TOKEN_REFRESH_TYPE.getValue(), null));
 			String authToken = request.getHeader(authHeader);
 			Jwts.parserBuilder()
 					.requireIssuer(issuer)
