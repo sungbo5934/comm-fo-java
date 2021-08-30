@@ -35,6 +35,14 @@ public class HttpServletUtil {
 	@Value("${header.authorization}")
 	private String authHeader;
 	
+	/** 
+	* 설명 : Response에 새로운 Token값을 넣어준다.
+	* @methodName : setResLoginToken 
+	* @author : Sungbo Sim
+	* @date : 2021.08.30 
+	* @param response
+	* @param claims 
+	*/
 	public void setResLoginToken(HttpServletResponse response, Map<String, Object> claims){
 		
 		if(claims.get(memberKey) != null) {
@@ -47,6 +55,15 @@ public class HttpServletUtil {
 		
 	}
 	
+	/** 
+	* 설명 : 자바 리플렉션을 통해 현재 유저의 대한 정보를 request에 주입한다.
+	* @methodName : getCommField 
+	* @author : Sungbo Sim
+	* @date : 2021.08.30 
+	* @param request
+	* @param claims
+	* @return 
+	*/
 	@SuppressWarnings("unchecked")
 	public byte[] getCommField(HttpServletRequest request, Map<String, Object> claims) {
 		
